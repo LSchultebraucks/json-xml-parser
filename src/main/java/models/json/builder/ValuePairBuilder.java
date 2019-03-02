@@ -20,6 +20,35 @@ public class ValuePairBuilder {
         return this;
     }
 
+    public ValuePairBuilder key(String foo) {
+        this.valuePair.setKey(new StringValue(foo));
+        return this;
+    }
+
+    public ValuePairBuilder value(String val) {
+        this.valuePair.setValue(new StringValue(val));
+        return this;
+    }
+
+    public ValuePairBuilder value(int val) {
+        this.valuePair.setValue(new NumberValue(val));
+        return this;
+    }
+
+    public ValuePairBuilder value(boolean val) {
+        if (val) {
+            this.valuePair.setValue(new TrueValue());
+        } else {
+            this.valuePair.setValue(new FalseValue());
+        }
+        return this;
+    }
+
+    public ValuePairBuilder value(Object _null) {
+        this.valuePair.setValue(new NullValue());
+        return this;
+    }
+
     public ValuePairBuilder setValue(Value value) {
         this.valuePair.setValue(value);
         return this;

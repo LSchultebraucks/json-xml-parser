@@ -1,10 +1,10 @@
-import models.json.JsonObject;
-import models.json.NumberValue;
-import models.json.StringValue;
-import models.json.ValuePair;
+import models.json.*;
 import models.json.builder.JsonObjectBuilder;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class JsonBuilderTest {
 
@@ -12,18 +12,28 @@ public class JsonBuilderTest {
     public void testJsonObjectBuilder() {
         // Arrange
         JsonObjectBuilder jsonObjectBuilder = new JsonObjectBuilder();
-        ValuePair expected1 = new ValuePair(new StringValue("foo"), new NumberValue(42));
-        ValuePair expected2 = new ValuePair(new StringValue("bar"), new StringValue("this is bar"));
+
+        List<ValuePair> expectedValues = Arrays.asList(
+                new ValuePair(new StringValue("foo"), new NumberValue(42)),
+                new ValuePair(new StringValue("bar"), new StringValue("this is bar")),
+                new ValuePair(new StringValue("isNull"), new NullValue()),
+                new ValuePair(new StringValue("isTrue"), new TrueValue()),
+                new ValuePair(new StringValue("isFalse"), new FalseValue())
+        );
 
         //Act
         jsonObjectBuilder
-                .add().setKey(new StringValue("foo")).setValue(new NumberValue(42)).addValuePairToProperties()
-                .add().setKey(new StringValue("bar")).setValue(new StringValue("this is bar")).addValuePairToProperties();
+                .addValuePair().key("foo").value(42).addValuePairToProperties()
+                .addValuePair().key("bar").value("this is bar").addValuePairToProperties()
+                .addValuePair().key("isNull").value(null).addValuePairToProperties()
+                .addValuePair().key("isTrue").value(true).addValuePairToProperties()
+                .addValuePair().key("isFalse").value(false).addValuePairToProperties();
         JsonObject jsonObject = jsonObjectBuilder.build();
 
         //Assert
-        assertValuePair(expected1, jsonObject.getValue().get(0));
-        assertValuePair(expected2, jsonObject.getValue().get(1));
+        for (int index = 0; index < jsonObject.getValue().size(); index++) {
+            assertValuePair(expectedValues.get(0), jsonObject.getValue().get(0));
+        }
     }
 
     private void assertValuePair(ValuePair expected, ValuePair actual) {

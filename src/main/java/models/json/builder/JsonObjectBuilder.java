@@ -17,7 +17,7 @@ public class JsonObjectBuilder {
         return this;
     }
 
-    public ValuePairBuilder add() {
+    public ValuePairBuilder addValuePair() {
         ValuePairBuilder valuePairBuilder = new ValuePairBuilder();
         valuePairBuilder.setJsonObjectBuilder(this);
         return valuePairBuilder;

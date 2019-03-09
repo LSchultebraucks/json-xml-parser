@@ -1,5 +1,6 @@
 import models.json.*;
-import models.json.builder.JsonObjectBuilder;
+import models.json.util.JsonObjectBuilder;
+import models.json.util.JsonObjectBuilderFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -23,11 +24,11 @@ public class JsonBuilderTest {
 
         //Act
         jsonObjectBuilder
-                .addValuePair().key("foo").value(42).addValuePairToProperties()
-                .addValuePair().key("bar").value("this is bar").addValuePairToProperties()
-                .addValuePair().key("isNull").value(null).addValuePairToProperties()
-                .addValuePair().key("isTrue").value(true).addValuePairToProperties()
-                .addValuePair().key("isFalse").value(false).addValuePairToProperties();
+                .addValuePair().key("foo").value(42).addValuePairToObject()
+                .addValuePair().key("bar").value("this is bar").addValuePairToObject()
+                .addValuePair().key("isNull").value(null).addValuePairToObject()
+                .addValuePair().key("isTrue").value(true).addValuePairToObject()
+                .addValuePair().key("isFalse").value(false).addValuePairToObject();
         JsonObject jsonObject = jsonObjectBuilder.build();
 
         //Assert
@@ -36,8 +37,41 @@ public class JsonBuilderTest {
         }
     }
 
+    @Test
+    public void testJsonObjectBuilderWithInnerJsonObject() {
+        // Arrange
+        JsonObjectBuilderFactory factory = new JsonObjectBuilderFactory();
+
+        String expectedKey = "foo";
+        ArrayValue expectedArrayValue = new ArrayValue();
+        List<Value> values = Arrays.asList(
+                new Value[]{new NumberValue(123), new StringValue("bar"), new NullValue()}
+        );
+        expectedArrayValue.setValue(values);
+
+        JsonObject jsonObject = factory.createJsonObjectBuilder()
+                .addValuePair()
+                .key("foo")
+                .addArrayValue()
+                .addValue(123)
+                .addValue("bar")
+                .addValue(null)
+                .addArrayValueToObject()
+                .addValuePairToObject()
+                .build();
+
+        Assert.assertEquals(expectedKey, jsonObject.getValue().get(0).getKey().getValue());
+        assertArrayValue(expectedArrayValue, (ArrayValue) jsonObject.getValue().get(0).getValue());
+    }
+
     private void assertValuePair(ValuePair expected, ValuePair actual) {
         Assert.assertEquals(expected.getKey().getValue(), actual.getKey().getValue());
         Assert.assertEquals(expected.getValue().getValue(), actual.getValue().getValue());
+    }
+
+    private void assertArrayValue(ArrayValue expected, ArrayValue actual) {
+        for (int index = 0; index < actual.getValue().size(); index++) {
+            Assert.assertEquals(expected.getValue().get(index).getValue(), actual.getValue().get(index).getValue());
+        }
     }
 }

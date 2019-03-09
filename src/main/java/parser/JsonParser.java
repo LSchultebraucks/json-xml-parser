@@ -1,7 +1,7 @@
 package parser;
 
 import models.json.JsonObject;
-import models.json.builder.JsonObjectBuilder;
+import models.json.util.JsonObjectBuilder;
 
 import java.io.IOException;
 

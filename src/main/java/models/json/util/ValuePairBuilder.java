@@ -1,4 +1,4 @@
-package models.json.builder;
+package models.json.util;
 
 import models.json.*;
 
@@ -44,8 +44,15 @@ public class ValuePairBuilder {
         return this;
     }
 
-    public ValuePairBuilder value(Object _null) {
-        this.valuePair.setValue(new NullValue());
+    public ValuePairBuilder value(Object value) {
+        if (value != null) {
+            try {
+                this.valuePair.setValue((ArrayValue) value);
+            } catch (Exception e) {
+                e.printStackTrace();
+                this.valuePair.setValue(new NullValue());
+            }
+        }
         return this;
     }
 
@@ -54,12 +61,18 @@ public class ValuePairBuilder {
         return this;
     }
 
-    public JsonObjectBuilder addValuePairToProperties() {
+    public JsonObjectBuilder addValuePairToObject() {
         this.jsonObjectBuilder.addProperty(this.build());
         return this.jsonObjectBuilder;
     }
 
     public void setJsonObjectBuilder(JsonObjectBuilder jsonObjectBuilder) {
         this.jsonObjectBuilder = jsonObjectBuilder;
+    }
+
+    public ArrayValueBuilder addArrayValue() {
+        ArrayValueBuilder arrayValueBuilder = new ArrayValueBuilder();
+        arrayValueBuilder.setValuePairBuilder(this);
+        return arrayValueBuilder;
     }
 }

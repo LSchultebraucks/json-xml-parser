@@ -1,4 +1,4 @@
-package models.json.builder;
+package models.json.util;
 
 import models.json.JsonObject;
 import models.json.ValuePair;

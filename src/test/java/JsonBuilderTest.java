@@ -32,8 +32,9 @@ public class JsonBuilderTest {
         JsonObject jsonObject = jsonObjectBuilder.build();
 
         //Assert
+        Assert.assertEquals(expectedValues.size(), jsonObject.getValue().size());
         for (int index = 0; index < jsonObject.getValue().size(); index++) {
-            assertValuePair(expectedValues.get(0), jsonObject.getValue().get(0));
+            assertValuePair(expectedValues.get(index), jsonObject.getValue().get(index));
         }
     }
 

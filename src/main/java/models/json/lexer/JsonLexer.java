@@ -1,5 +1,9 @@
 package models.json.lexer;
 
+import models.json.lexer.token.NumberToken;
+import models.json.lexer.token.StringToken;
+import models.json.lexer.token.Token;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -10,8 +14,8 @@ public class JsonLexer implements Lexer {
     private final char[] JSON_SYNTAX = {',', ':', '{', '}', '[', ']'};
 
     @Override
-    public List<String> lex(String jsonString) throws Exception {
-        List<String> tokens = new ArrayList<>();
+    public List<Token> lex(String jsonString) throws Exception {
+        List<Token> tokens = new ArrayList<>();
 
         while (jsonString.length() > 0) {
 
@@ -32,7 +36,7 @@ public class JsonLexer implements Lexer {
                 if (!foundEndOfString) {
                     throw new Exception("Error while parsing string - no end of string quote found.");
                 }
-                tokens.add(stringTokenBuilder.toString());
+                tokens.add(new StringToken(stringTokenBuilder.toString()));
             }
 
             // lex number
@@ -51,9 +55,9 @@ public class JsonLexer implements Lexer {
             jsonString = jsonString.substring(numberTokenBuilder.length());
 
             if (numberTokenBuilder.toString().contains(".")) {
-                tokens.add(String.valueOf(Double.parseDouble(numberTokenBuilder.toString())));
+                tokens.add(new NumberToken(String.valueOf(Double.parseDouble(numberTokenBuilder.toString()))));
             } else if (!numberTokenBuilder.toString().equals("")) {
-                tokens.add(numberTokenBuilder.toString());
+                tokens.add(new NumberToken(numberTokenBuilder.toString()));
             }
 
             // lex bool

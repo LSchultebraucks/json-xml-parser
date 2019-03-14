@@ -1,7 +1,9 @@
 package models.json.lexer;
 
+import models.json.lexer.token.Token;
+
 import java.util.List;
 
 public interface Lexer {
-    List<String> lex(String jsonString) throws Exception;
+    List<Token> lex(String jsonString) throws Exception;
 }

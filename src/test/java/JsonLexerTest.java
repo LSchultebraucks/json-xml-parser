@@ -1,9 +1,6 @@
 import models.json.lexer.JsonLexer;
 import models.json.lexer.Lexer;
-import models.json.lexer.token.BooleanToken;
-import models.json.lexer.token.NumberToken;
-import models.json.lexer.token.StringToken;
-import models.json.lexer.token.Token;
+import models.json.lexer.token.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -172,6 +169,56 @@ public class JsonLexerTest {
         expected.add(new NumberToken("42"));
         expected.add(new BooleanToken(true));
         expected.add(new BooleanToken(false));
+
+        // Act
+        List<Token> actual = lexer.lex(testString);
+
+        // Assert
+        assertLexerResult(expected, actual);
+    }
+
+    @Test
+    public void testJsonLexer_lex_ShouldLexNullCorrectly() throws Exception {
+        // Arrange
+        String testString = "null";
+        List<Token> expected = new ArrayList<>();
+        expected.add(new NullValue());
+
+        // Act
+        List<Token> actual = lexer.lex(testString);
+
+        // Assert
+        assertLexerResult(expected, actual);
+    }
+
+    @Test
+    public void testJsonLexer_lex_ShouldLexStringAndNumberAndBooleanValuesAndNullCorrectly() throws Exception {
+        // Arrange
+        String testString = "\"actual string\"42truefalsenull";
+        List<Token> expected = new ArrayList<>();
+        expected.add(new StringToken("actual string"));
+        expected.add(new NumberToken("42"));
+        expected.add(new BooleanToken(true));
+        expected.add(new BooleanToken(false));
+        expected.add(new NullValue());
+
+        // Act
+        List<Token> actual = lexer.lex(testString);
+
+        // Assert
+        assertLexerResult(expected, actual);
+    }
+
+    @Test
+    public void testJsonLexer_lex_ShouldLexStringAndNumberAndBooleanValuesAndNullReversedCorrectly() throws Exception {
+        // Arrange
+        String testString = "nullfalsetrue42\"actual string\"";
+        List<Token> expected = new ArrayList<>();
+        expected.add(new NullValue());
+        expected.add(new BooleanToken(false));
+        expected.add(new BooleanToken(true));
+        expected.add(new NumberToken("42"));
+        expected.add(new StringToken("actual string"));
 
         // Act
         List<Token> actual = lexer.lex(testString);

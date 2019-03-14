@@ -1,9 +1,6 @@
 package models.json.lexer;
 
-import models.json.lexer.token.BooleanToken;
-import models.json.lexer.token.NumberToken;
-import models.json.lexer.token.StringToken;
-import models.json.lexer.token.Token;
+import models.json.lexer.token.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -65,15 +62,19 @@ public class JsonLexer implements Lexer {
             }
 
             // lex bool
-            if (jsonString.length() >= TRUE_LENGTH && jsonString.startsWith("true")) {
+            if (jsonString.startsWith("true")) {
                 jsonString = jsonString.substring(TRUE_LENGTH);
                 tokens.add(new BooleanToken(true));
-            } else if (jsonString.length() >= FALSE_LENGTH && jsonString.startsWith("false")) {
+            } else if (jsonString.startsWith("false")) {
                 jsonString = jsonString.substring(FALSE_LENGTH);
                 tokens.add(new BooleanToken(false));
             }
 
             // lex null
+            if (jsonString.startsWith("null")) {
+                jsonString = jsonString.substring(NULL_LENGTH);
+                tokens.add(new NullValue());
+            }
 
             // lex whitespace -> ignore
 

@@ -227,6 +227,8 @@ public class JsonLexerTest {
         assertLexerResult(expected, actual);
     }
 
+    // TODO: tests for whitespace, json syntax and simulation with full correct json
+
     private void assertLexerResult(List<Token> expected, List<Token> actual) {
         Assert.assertEquals(expected.size(), actual.size());
         for (int index = 0; index < expected.size(); index++) {

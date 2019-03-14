@@ -8,8 +8,8 @@ import java.util.List;
 
 public class JsonLexer implements Lexer {
     private final char JSON_QUOTE = '"';
-    private final char[] JSON_WHITESPACE = {' ', '\t', '\b', '\n', 'r'};
-    private final char[] JSON_SYNTAX = {',', ':', '{', '}', '[', ']'};
+    private final List<Character> JSON_WHITESPACE = Arrays.asList(' ', '\t', '\b', '\n', 'r');
+    private final List<Character> JSON_SYNTAX = Arrays.asList(',', ':', '{', '}', '[', ']');
     private final int TRUE_LENGTH = "true".length();
     private final int FALSE_LENGTH = "false".length();
     private final int NULL_LENGTH = "null".length();
@@ -38,6 +38,7 @@ public class JsonLexer implements Lexer {
                     throw new Exception("Error while parsing string - no end of string quote found.");
                 }
                 tokens.add(new StringToken(stringTokenBuilder.toString()));
+                continue;
             }
 
             // lex number
@@ -57,28 +58,40 @@ public class JsonLexer implements Lexer {
 
             if (numberTokenBuilder.toString().contains(".")) {
                 tokens.add(new NumberToken(String.valueOf(Double.parseDouble(numberTokenBuilder.toString()))));
+                continue;
             } else if (!numberTokenBuilder.toString().equals("")) {
                 tokens.add(new NumberToken(numberTokenBuilder.toString()));
+                continue;
             }
 
             // lex bool
             if (jsonString.startsWith("true")) {
                 jsonString = jsonString.substring(TRUE_LENGTH);
                 tokens.add(new BooleanToken(true));
+                continue;
             } else if (jsonString.startsWith("false")) {
                 jsonString = jsonString.substring(FALSE_LENGTH);
                 tokens.add(new BooleanToken(false));
+                continue;
             }
 
             // lex null
             if (jsonString.startsWith("null")) {
                 jsonString = jsonString.substring(NULL_LENGTH);
                 tokens.add(new NullValue());
+                continue;
             }
 
             // lex whitespace -> ignore
-
-            // lex syntax
+            Character firstChar = jsonString.charAt(0);
+            if (JSON_WHITESPACE.stream().anyMatch(whitespace -> whitespace.equals(firstChar))) {
+                jsonString = jsonString.substring(1);
+            } else if (JSON_SYNTAX.stream().anyMatch(whitespace -> whitespace.equals(firstChar))) { // lex syntax
+                jsonString = jsonString.substring(1);
+                tokens.add(new JsonSyntaxToken(firstChar));
+            } else {
+                throw new Exception("Error while parsing json: " + jsonString);
+            }
         }
 
         return tokens;

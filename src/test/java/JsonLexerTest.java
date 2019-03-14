@@ -1,5 +1,6 @@
 import models.json.lexer.JsonLexer;
 import models.json.lexer.Lexer;
+import models.json.lexer.token.BooleanToken;
 import models.json.lexer.token.NumberToken;
 import models.json.lexer.token.StringToken;
 import models.json.lexer.token.Token;
@@ -138,13 +139,45 @@ public class JsonLexerTest {
     public void testJsonLexer_lex_ShouldLexBooleanValueTrueCorrectly() throws Exception {
         // Arrange
         String testString = "true";
-        List<String> expected = Arrays.asList("true");
+        List<Token> expected = new ArrayList<>();
+        expected.add(new BooleanToken(true));
 
         // Act
-        // List<Token> actual = lexer.lex(testString);
+        List<Token> actual = lexer.lex(testString);
 
         // Assert
-        // assertLexerResult(expected, actual);
+        assertLexerResult(expected, actual);
+    }
+
+    @Test
+    public void testJsonLexer_lex_ShouldLexBooleanValueFalseCorrectly() throws Exception {
+        // Arrange
+        String testString = "false";
+        List<Token> expected = new ArrayList<>();
+        expected.add(new BooleanToken(false));
+
+        // Act
+        List<Token> actual = lexer.lex(testString);
+
+        // Assert
+        assertLexerResult(expected, actual);
+    }
+
+    @Test
+    public void testJsonLexer_lex_ShouldLexStringAndNumberAndBooleanValuesCorrectly() throws Exception {
+        // Arrange
+        String testString = "\"actual string\"42truefalse";
+        List<Token> expected = new ArrayList<>();
+        expected.add(new StringToken("actual string"));
+        expected.add(new NumberToken("42"));
+        expected.add(new BooleanToken(true));
+        expected.add(new BooleanToken(false));
+
+        // Act
+        List<Token> actual = lexer.lex(testString);
+
+        // Assert
+        assertLexerResult(expected, actual);
     }
 
     private void assertLexerResult(List<Token> expected, List<Token> actual) {

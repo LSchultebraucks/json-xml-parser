@@ -1,5 +1,6 @@
 package models.json.lexer;
 
+import models.json.lexer.token.BooleanToken;
 import models.json.lexer.token.NumberToken;
 import models.json.lexer.token.StringToken;
 import models.json.lexer.token.Token;
@@ -12,6 +13,9 @@ public class JsonLexer implements Lexer {
     private final char JSON_QUOTE = '"';
     private final char[] JSON_WHITESPACE = {' ', '\t', '\b', '\n', 'r'};
     private final char[] JSON_SYNTAX = {',', ':', '{', '}', '[', ']'};
+    private final int TRUE_LENGTH = "true".length();
+    private final int FALSE_LENGTH = "false".length();
+    private final int NULL_LENGTH = "null".length();
 
     @Override
     public List<Token> lex(String jsonString) throws Exception {
@@ -61,6 +65,13 @@ public class JsonLexer implements Lexer {
             }
 
             // lex bool
+            if (jsonString.length() >= TRUE_LENGTH && jsonString.startsWith("true")) {
+                jsonString = jsonString.substring(TRUE_LENGTH);
+                tokens.add(new BooleanToken(true));
+            } else if (jsonString.length() >= FALSE_LENGTH && jsonString.startsWith("false")) {
+                jsonString = jsonString.substring(FALSE_LENGTH);
+                tokens.add(new BooleanToken(false));
+            }
 
             // lex null
 

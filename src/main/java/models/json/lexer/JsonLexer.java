@@ -78,7 +78,7 @@ public class JsonLexer implements Lexer {
             // lex null
             if (jsonString.startsWith("null")) {
                 jsonString = jsonString.substring(NULL_LENGTH);
-                tokens.add(new NullValue());
+                tokens.add(new NullToken());
                 continue;
             }
 

@@ -1,11 +1,11 @@
 package models.json.lexer.token;
 
-public class NullValue extends Token<Object> {
-    public NullValue() {
+public class NullToken extends Token<Object> {
+    public NullToken() {
         super(null);
     }
 
-    public NullValue(Object ignored) {
+    public NullToken(Object ignored) {
         super(null);
     }
 

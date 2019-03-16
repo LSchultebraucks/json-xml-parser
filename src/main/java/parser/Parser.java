@@ -1,7 +1,9 @@
 package parser;
 
-import java.io.IOException;
+import models.json.lexer.token.Token;
+
+import java.util.List;
 
 public interface Parser<T> {
-    T parseString(String object);
+    T parse(List<Token> tokens) throws Exception;
 }

@@ -6,11 +6,10 @@ import models.json.util.JsonObjectBuilder;
 
 import java.util.List;
 
+import static parser.JsonConstants.LEFT_BRACE;
+import static parser.JsonConstants.LEFT_BRACKET;
+
 public class JsonParser implements Parser<JsonObject> {
-    private final Character LEFT_BRACE = '{';
-    private final Character RIGHT_BRACE = '}';
-    private final Character LEFT_BRACKET = '[';
-    private final Character RIGHT_BRACKET = ']';
 
     public JsonObject parse(List<Token> tokens) throws Exception {
         JsonObjectBuilder jsonObjectBuilder = new JsonObjectBuilder();

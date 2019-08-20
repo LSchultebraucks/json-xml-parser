@@ -14,13 +14,13 @@ public class JsonParser implements Parser<JsonObject> {
     public JsonObject parse(List<Token> tokens) throws Exception {
         JsonObjectBuilder jsonObjectBuilder = new JsonObjectBuilder();
 
-        boolean isFirstToken = true;
+        int index = 0;
 
         while (tokens.size() > 0) {
-            Token currentToken = tokens.get(0);
+            Token currentToken = tokens.get(index);
 
-            if (isFirstToken && currentToken.getTokenValue() != LEFT_BRACE) {
-                throw new Exception("JSON object must be begin with '{', got: " + tokens.get(0).getTokenValue());
+            if (index == 0 && currentToken.getTokenValue() != LEFT_BRACE) {
+                throw new Exception("JSON object must be begin with '{', got: " + tokens.get(index).getTokenValue());
             } else if (currentToken.getTokenValue() == LEFT_BRACKET) {
                 // Start of Array
                 continue;
@@ -29,7 +29,7 @@ public class JsonParser implements Parser<JsonObject> {
                 continue;
             }
 
-            isFirstToken = false;
+            index++;
         }
 
         return jsonObjectBuilder.build();
